@@ -32,11 +32,14 @@ class Server:
         self.context.verify_mode = ssl.CERT_OPTIONAL
 
         self.routes = {}
+        self.default_route = '/'
 
-    def route(self, path):
+    def route(self, path, default=False):
         '''
         Decorator which associates a handler with a route.
         '''
+        if default:
+            self.default_route = path
         def save_route_handler(handler):
             self.routes[path] = handler
         return save_route_handler
@@ -45,19 +48,27 @@ class Server:
         route = req.url.path.decode('utf-8')
         if route == '':
             return self.routes['/']
-        return self.routes[route]
+        return self.routes[route if route in self.routes else self.default_route]
+
+    def _on_connection(self, conn, addr):
+        try:
+            req = Request(conn)
+            res = Response(conn)
+            self._determine_route_handler(req)(req, res)
+        except InvalidURLScheme as e:
+            print(e)
+        finally:
+            conn.close()
 
     def listen(self, port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) as sock:
             sock.bind(('127.0.0.1', port))
             sock.listen(5)
             with self.context.wrap_socket(sock, server_side=True) as ssock:
-                conn, _ = ssock.accept()
-                try:
-                    req = Request(conn)
-                    res = Response(conn)
-                    self._determine_route_handler(req)(req, res)
-                except InvalidURLScheme as e:
-                    print(e)
-                finally:
-                    conn.close()
+                while True:
+                    try:
+                        conn, addr = ssock.accept()
+                        self._on_connection(conn, addr)
+                    except KeyboardInterrupt:
+                        print('Keyboard interrupt, closing server...')
+                        exit(130)
