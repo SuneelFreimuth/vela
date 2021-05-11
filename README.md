@@ -1,4 +1,4 @@
-# Cygnus
+# Cygnus (alpha)
 A simple framework for Gemini servers inspired by Flask and Express.js.
 ```python
 from cygnus import Server
