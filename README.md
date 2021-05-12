@@ -2,7 +2,8 @@
 A simple framework for Gemini servers inspired by Flask and Express.js.
 ```python
 from cygnus import Server
-app = Server()
+# SSL certificate and private key.
+app = Server(cert='cert.pem', key='key.pem')
 
 @app.route('/')
 def hello(req, res):
