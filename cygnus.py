@@ -1,6 +1,9 @@
 import socket
 import ssl
 from urllib.parse import urlparse
+import mimetypes
+mimetypes.add_type('text/gemini', '.gmi')
+
 
 class InvalidURLScheme(Exception):
     pass
@@ -12,16 +15,22 @@ class Request:
             raise InvalidURLScheme(f'URL scheme must be gemini://, got {self.url.scheme}')
 
 class Response:
-    def __init__(self, conn):
+    def __init__(self, conn: socket.socket):
         self.conn = conn
 
-    def send(self, text):
-        header_and_body = '20 text/gemini\r\n' + text
-        self.conn.send(bytes(header_and_body, encoding='utf-8'))
+    def send(self, text: str):
+        self._send_header_and_body(b'20 text/gemini', text.encode('utf-8'))
 
-    def send_file(self, file_path):
-        with open(file_path) as f:
-            self.send(f.read())
+    def send_file(self, file_path: str):
+        with open(file_path, 'rb') as f:
+            mimetype, _ = mimetypes.guess_type(file_path)
+            self._send_header_and_body(
+                bytes('20 ' + mimetype, encoding='utf-8'),
+                f.read()
+            )
+
+    def _send_header_and_body(self, header: bytes, body: bytes):
+        self.conn.send(header + b'\r\n' + body)
 
 class Server:
     def __init__(self):
@@ -34,7 +43,7 @@ class Server:
         self.routes = {}
         self.default_route = '/'
 
-    def route(self, path, default=False):
+    def route(self, path: str, default=False):
         '''
         Decorator which associates a handler with a route.
         '''
@@ -70,5 +79,11 @@ class Server:
                         conn, addr = ssock.accept()
                         self._on_connection(conn, addr)
                     except KeyboardInterrupt:
+                        ssock.close()
                         print('Keyboard interrupt, closing server...')
                         exit(130)
+                    except Exception as e:
+                        ssock.close()
+                        raise
+
+
