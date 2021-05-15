@@ -1,2 +1,7 @@
-__pycache__
+__pycache__/
+assets/
+.vscode/
+dist/
+
+main.py
 *.pem

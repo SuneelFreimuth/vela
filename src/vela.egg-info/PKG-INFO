@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: vela
+Version: 0.0.1
+Summary: A simple framework for Gemini servers inspired by Flask and Express.js.
+Home-page: https://github.com/SuneelFreimuth/cygnus
+Author: Suneel Freimuth
+Author-email: suneelfreimuth1@gmail.com
+License: UNKNOWN
+Project-URL: Bug Tracker, https://github.com/SuneelFreimuth/cygnus/issues
+Description: # Vela (alpha)
+        A simple framework for Gemini servers inspired by Flask and Express.js.
+        
+        ```python
+        from cygnus import Server
+        # SSL certificate and private key.
+        app = Server(cert='cert.pem', key='key.pem')
+        
+        @app.route('/')
+        def hello(req, res):
+            res.send_file('hello.gmi')
+        
+        PORT = 5000
+        print(f'Server is listening on port {PORT}...')
+        app.listen(PORT)
+        ```
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
