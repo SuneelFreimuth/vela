@@ -2,6 +2,8 @@ __pycache__/
 assets/
 .vscode/
 dist/
+build
+*.egg-info
 
 main.py
 *.pem
