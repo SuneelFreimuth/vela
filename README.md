@@ -2,7 +2,7 @@
 A simple framework for Gemini servers inspired by Flask and Express.js.
 
 ```shell
-pip install vela
+$ pip install vela
 ```
 
 ```python
