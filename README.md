@@ -1,6 +1,10 @@
 # Vela (alpha)
 A simple framework for Gemini servers inspired by Flask and Express.js.
 
+```shell
+pip install vela
+```
+
 ```python
 from vela import Server
 # SSL certificate and private key.
