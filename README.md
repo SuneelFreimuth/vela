@@ -1,10 +1,6 @@
 # Vela (alpha)
 A simple framework for Gemini servers inspired by Flask and Express.js.
 
-```shell
-pip install vela
-```
-
 ```python
 from vela import Server
 # SSL certificate and private key.
@@ -17,6 +13,13 @@ def hello(req, res):
 PORT = 1965
 print(f'Server is listening on port {PORT}...')
 app.listen(PORT)
+```
+
+## Installation
+
+Through pip:
+```shell
+pip install vela
 ```
 
 ## Usage
@@ -46,7 +49,7 @@ def greet(req, res):
     name = req.route.params['name']
     # ...
 
-# Prepending a * to a route parameter matching all subsequent
+# Prepending a * to a route parameter matches all subsequent
 # segments, provided as a list.
 @app.route('/{greeting}/{*names}')
 def greet(req, res):
