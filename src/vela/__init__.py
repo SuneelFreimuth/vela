@@ -113,7 +113,7 @@ class Server:
 
     def _parse_route(self, route: str):
         for route_pattern in self.routes.keys():
-            route_params = parse_route(route_pattern)
+            route_params = parse_route(route_pattern, route)
             if route_params != None:
                 return route_params
         return None
