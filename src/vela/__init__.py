@@ -155,6 +155,8 @@ class Server:
                         print("Keyboard interrupt, closing server...")
                         exit_code = 130
                         break
+                    except ssl.SSLError as e:
+                        print(f"SSL Error ({e})")
         if exit_code != 0:
             exit(exit_code)
 
