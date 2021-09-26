@@ -140,11 +140,11 @@ class Server:
         finally:
             conn.close()
 
-    def listen(self, port: int):
+    def listen(self, port: int, address: str = "127.0.0.1"):
         exit_code = 0
         # TODO: Replace with interface which allows a testing component to be shimmed in
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0) as sock:
-            sock.bind(("127.0.0.1", port))
+            sock.bind((address, port))
             sock.listen(5)
             with self.context.wrap_socket(sock, server_side=True) as ssock:
                 while True:
